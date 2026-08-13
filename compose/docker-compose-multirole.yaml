@@ -25,7 +25,7 @@ services:
       - discovery.type=single-node
       - ES_JAVA_OPTS=-Xms512m -Xmx512m
       - xpack.security.enabled=false
-    image: elasticsearch:${ELASTICSEARCH_VERSION}
+    image: elasticsearch:7.17.27
     healthcheck:
       test:
         [
@@ -43,7 +43,7 @@ services:
     environment:
       POSTGRES_PASSWORD: ${SERVICE_PASSWORD_POSTGRESQL}
       POSTGRES_USER: ${SERVICE_USER_POSTGRESQL}
-    image: postgres:${POSTGRESQL_VERSION}
+    image: postgres:18
     volumes:
       - /var/lib/postgresql/data
     healthcheck:
@@ -55,7 +55,7 @@ services:
 
   temporal-setup:
     <<: *loki-logging
-    image: temporalio/admin-tools:${TEMPORAL_ADMINTOOLS_VERSION}
+    image: temporalio/admin-tools:latest
     container_name: temporal-setup
     restart: on-failure:6
     depends_on:
