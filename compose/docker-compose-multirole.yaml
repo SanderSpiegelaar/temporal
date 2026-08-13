@@ -102,7 +102,7 @@ services:
       ES_VERSION: v7
       TEMPORAL_CLI_ADDRESS: temporal-nginx:7233
       TEMPORAL_ADDRESS: temporal-nginx:7233
-    image: temporalio/server:${TEMPORAL_VERSION}
+    image: temporalio/server:latest
     restart: on-failure
     volumes:
       - ./dynamicconfig:/etc/temporal/config/dynamicconfig
@@ -128,7 +128,7 @@ services:
       ES_VERSION: v7
       TEMPORAL_CLI_ADDRESS: temporal-nginx:7233
       TEMPORAL_ADDRESS: temporal-nginx:7233
-    image: temporalio/server:${TEMPORAL_VERSION}
+    image: temporalio/server:latest
     restart: on-failure
     volumes:
       - ./dynamicconfig:/etc/temporal/config/dynamicconfig
@@ -155,7 +155,7 @@ services:
       ES_VERSION: v7
       TEMPORAL_CLI_ADDRESS: temporal-nginx:7233
       TEMPORAL_ADDRESS: temporal-nginx:7233
-    image: temporalio/server:${TEMPORAL_VERSION}
+    image: temporalio/server:latest
     restart: on-failure
     volumes:
       - ./dynamicconfig:/etc/temporal/config/dynamicconfig
@@ -185,7 +185,7 @@ services:
       ES_VERSION: v7
       TEMPORAL_CLI_ADDRESS: temporal-nginx:7233
       TEMPORAL_ADDRESS: temporal-nginx:7233
-    image: temporalio/server:${TEMPORAL_VERSION}
+    image: temporalio/server:latest
     restart: on-failure
     volumes:
       - ./dynamicconfig:/etc/temporal/config/dynamicconfig
@@ -213,13 +213,13 @@ services:
       ENABLE_ES: true
       ES_SEEDS: elasticsearch
       ES_VERSION: v7
-    image: temporalio/server:${TEMPORAL_VERSION}
+    image: temporalio/server:latest
     volumes:
       - ./dynamicconfig:/etc/temporal/config/dynamicconfig
 
   temporal-create-namespace:
     <<: *loki-logging
-    image: temporalio/admin-tools:${TEMPORAL_ADMINTOOLS_VERSION}
+    image: temporalio/admin-tools:latest
     container_name: temporal-create-namespace
     restart: on-failure:5
     depends_on:
@@ -240,7 +240,7 @@ services:
     environment:
       TEMPORAL_CLI_ADDRESS: temporal-nginx:7233
       TEMPORAL_ADDRESS: temporal-nginx:7233
-    image: temporalio/admin-tools:${TEMPORAL_ADMINTOOLS_VERSION}
+    image: temporalio/admin-tools:latest
     stdin_open: true
     tty: true
 
@@ -253,7 +253,7 @@ services:
       TEMPORAL_CORS_ORIGINS: http://localhost:3000
       TEMPORAL_CLI_ADDRESS: temporal-nginx:7233
       TEMPORAL_ADDRESS: temporal-nginx:7233
-    image: temporalio/ui:${TEMPORAL_UI_VERSION}
+    image: temporalio/ui:latest
 
   prometheus:
     container_name: prometheus
@@ -285,8 +285,6 @@ services:
 
   jaeger-all-in-one:
     image: jaegertracing/all-in-one:1.37
-    networks:
-      - temporal-network
 
   otel-collector:
     image: otel/opentelemetry-collector:0.47.0
@@ -297,8 +295,6 @@ services:
         target: /etc/otel-collector-config.yaml
     depends_on:
       - jaeger-all-in-one
-    networks:
-      - temporal-network
 
   temporal-nginx:
     <<: *loki-logging
@@ -310,5 +306,3 @@ services:
       - temporal-frontend2
     volumes:
       - ./deployment/nginx/nginx.conf:/etc/nginx/nginx.conf
-    networks:
-      - temporal-network
