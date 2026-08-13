@@ -7,6 +7,10 @@ x-logging: &loki-logging
       max-buffer-size: 4m
       loki-retries: "3"
 
+volumes:
+  postgres-data:
+    driver: local
+
 services:
   loki:
     container_name: loki
@@ -39,13 +43,13 @@ services:
 
   postgresql:
     <<: *loki-logging
-    container_name: temporal-postgresql
+    container_name: postgresql
     environment:
       POSTGRES_PASSWORD: ${SERVICE_PASSWORD_POSTGRESQL}
       POSTGRES_USER: ${SERVICE_USER_POSTGRESQL}
     image: postgres:18
     volumes:
-      - /var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${SERVICE_USER_POSTGRESQL}"]
       interval: 5s
